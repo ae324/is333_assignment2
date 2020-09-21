@@ -1,91 +1,83 @@
 package is333;
 
-import java.util.StringTokenizer;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
 import java.io.*;
-import java.util.ArrayList;
-
 
 public class index {
-    private void writeData(String filename) throws IOException {
-        BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
-        //write information begin
-        for (int i = 0; i < 10; i++) {
-            bw.write(i + "\n");
+    public static void main(String[]args) throws IOException {
+        int[][] edges = new int[5000][5000];
+        // ArrayList edges = new ArrayList();
+
+        String[] names = new String[109];
+
+        File file = new File("/Users/allis/Desktop/friendship.txt");
+        int count = 0;
+
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        String line;
+
+        while (count==0) {
+            line = (br.readLine());
+            names = line.split(", ", 0);
+            ++count;
         }
-        //write information end
+        int leftNode = 0;
+        int rightNode = 1;
+        int i = 1;
+        while ((line = br.readLine()) != null) {
+            String [] tempArray = line.split(",", 0);
+            int [] tempArray2 = new int [109];
+            for (int k=0; k<tempArray.length-1; ++k) {
+                tempArray2[k] = Integer.parseInt(tempArray[k+1]);
+            }
+            edges[leftNode][leftNode] = i;
+
+            for (int f = 0; f <= tempArray2.length - 1; ++f) {
+                if (tempArray2[f] == 1) {
+                    boolean duplicate = false;
+                    for (int l=0; l < edges.length; ++l) {
+                        if (edges[l][l] == 1+1 && edges[l][l+1] == i) {
+                            duplicate = true;
+                        }
+                    }
+                    if (duplicate == false ) {
+                        edges[leftNode][leftNode] = i;
+                        edges[leftNode][rightNode] = f+i;
+                        ++leftNode;
+                        ++rightNode;
+                    }
+                    else {
+                        continue;
+                    }
+                }
+            }
+            ++i;
+        }
+        br.close();
+
+        File file2 = new File("/Users/allis/Desktop/execute.txt");
+        BufferedWriter bw = new BufferedWriter(new FileWriter(file2));
+
+        bw.write("*Verticies"  + " " + names.length);
+        bw.newLine();
+        System.out.println("*Verticies");
+
+        for (int x=0; x<names.length-1; ++x) {
+            bw.write(names[x]);
+            bw.newLine();
+            System.out.println(names[x]);
+        }
+
+        bw.write("*Edges" + " " + edges.length);
+        bw.newLine();
+        System.out.println("*Edges" );
+
+        for(int y=0; y<edges.length-1; ++y) {
+            if (edges[y][y] != 0 && edges[y][y+1] != 0) {
+                bw.write(edges[y][y] + " " + edges[y][y+1] + "\n");
+                bw.newLine();
+                System.out.println(edges[y][y] + " " + edges[y][y+1]);
+            }
+        }
         bw.close();
     }
-
-    private void readData(String filename) throws FileNotFoundException, IOException {
-        ArrayList information = new ArrayList();
-        FileReader fr = new FileReader(filename);
-        BufferedReader br = new BufferedReader(fr);
-        String line;
-        //read information begin
-        while ((line = br.readLine()) != null) {
-            information.add(line);
-            System.out.println(information.get(information.size() - 1));
-        }
-        //read information end
-    }
-
-    private void loadInformation(String filename) throws FileNotFoundException, IOException {
-        ArrayList nodeName = new ArrayList();
-        int[][] relationship = new int[1][1];
-
-        FileReader fr = new FileReader(filename);
-        BufferedReader br = new BufferedReader(fr);
-        String line;
-        Boolean getNodeInformation = false;
-        boolean getRelationshipInformation = false;
-
-        //begin read information
-        while ((line = br.readLine()) != null) {
-            if (line.startsWith("*")) {// change the control parameter
-                if (line.startsWith("*Vertices")) {
-                    getNodeInformation = true;
-                    getRelationshipInformation = false;
-                }
-                if (line.startsWith("*Edges")) {
-                    getNodeInformation = false;
-                    getRelationshipInformation = true;
-                    relationship =
-                            new int[nodeName.size()][nodeName.size()];
-                }
-            } else {//update the related parameter
-                if (getNodeInformation) {
-                    String name =
-                            line.substring(line.indexOf(" ") + 1);
-                    nodeName.add(name);
-                }
-                if (getRelationshipInformation) {
-                    String[] index = line.split(" ");
-                    relationship[Integer.parseInt(index[0]) - 1]
-                            [Integer.parseInt(index[1]) - 1] = 1;
-                    relationship[Integer.parseInt(index[1]) - 1]
-                            [Integer.parseInt(index[0]) - 1] = 1;
-                }
-            }
-        }
-        //end read information
-
-        for (int i = 0; i < nodeName.size(); i++) {
-            System.out.print("," + nodeName.get(i));
-        }
-        System.out.print("\n");
-
-        for (int i = 0; i < nodeName.size(); i++) {
-            System.out.print(nodeName.get(i).toString());
-            for (int j = 0; j < nodeName.size(); j++) {
-                System.out.print("," + relationship[i][j]);
-            }
-            System.out.print("\n");
-        }
-    }
 }
-
