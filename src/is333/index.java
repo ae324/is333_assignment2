@@ -1,11 +1,20 @@
 package is333;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
+import java.util.StringTokenizer;
+import java.util.ArrayList;
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.*;
 
 public class index {
     public static void main(String[]args) throws IOException {
+
         int[][] edges = new int[5000][5000];
-        // ArrayList edges = new ArrayList();
 
         String[] names = new String[109];
 
@@ -15,11 +24,13 @@ public class index {
         BufferedReader br = new BufferedReader(new FileReader(file));
         String line;
 
+
         while (count==0) {
             line = (br.readLine());
-            names = line.split(", ", 0);
+            names = line.split(",", 0);
             ++count;
         }
+
         int leftNode = 0;
         int rightNode = 1;
         int i = 1;
@@ -57,17 +68,18 @@ public class index {
         File file2 = new File("/Users/allis/Desktop/execute.txt");
         BufferedWriter bw = new BufferedWriter(new FileWriter(file2));
 
-        bw.write("*Verticies"  + " " + names.length);
+        bw.write("Verticies:"  + " " + names.length);
         bw.newLine();
-        System.out.println("*Verticies");
+        System.out.println("Verticies:");
 
-        for (int x=0; x<names.length-1; ++x) {
-            bw.write(names[x]);
-            bw.newLine();
-            System.out.println(names[x]);
+        for (int x=0; x<names.length; x++) {
+            bw.write((x+1)+" "+names[x]+'\n');
+            System.out.println((x+1)+" "+names[x]);
         }
 
-        bw.write("*Edges" + " " + edges.length);
+        bw.write('\n');
+
+        bw.write("Edges: " + " " + edges.length);
         bw.newLine();
         System.out.println("*Edges" );
 
@@ -78,6 +90,10 @@ public class index {
                 System.out.println(edges[y][y] + " " + edges[y][y+1]);
             }
         }
+
+
         bw.close();
+
     }
+
 }
